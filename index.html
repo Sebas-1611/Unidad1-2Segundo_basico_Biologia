@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Estudio – Principios de Evolución</title>
+<style>
+  :root {
+    --primary: #1a6b3c;
+    --primary-dark: #134d2c;
+    --primary-light: #e8f5ee;
+    --accent: #f0a500;
+    --accent-light: #fff8e1;
+    --bg: #f4f7f4;
+    --card: #ffffff;
+    --text: #1c2b1c;
+    --text-light: #5a6f5a;
+    --border: #cde3d5;
+    --correct: #2e7d32;
+    --incorrect: #c62828;
+    --shadow: 0 4px 18px rgba(26,107,60,0.10);
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* NAV */
+  nav { background: var(--primary); padding: 0 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,.2); }
+  nav .brand { color: #fff; font-weight: 800; font-size: 1.15rem; padding: 14px 0; letter-spacing: .3px; }
+  nav .nav-links { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 0; }
+  nav .nav-links a { color: rgba(255,255,255,.85); text-decoration: none; padding: 6px 13px; border-radius: 20px; font-size: .84rem; font-weight: 500; transition: background .2s; }
+  nav .nav-links a:hover, nav .nav-links a.active { background: rgba(255,255,255,.18); color: #fff; }
+
+  /* PROGRESS */
+  .progress-bar-wrap { background: var(--primary-dark); padding: 8px 20px; display: flex; align-items: center; gap: 12px; }
+  .progress-label { color: #a8d8b8; font-size: .8rem; white-space: nowrap; min-width: 140px; }
+  .progress-track { flex: 1; height: 8px; background: rgba(255,255,255,.2); border-radius: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, #56e09a, #00c853); border-radius: 10px; transition: width .5s ease; width: 0%; }
+
+  /* HERO */
+  .hero { background: linear-gradient(135deg, var(--primary) 0%, #2e8b57 100%); color: #fff; padding: 48px 24px 36px; text-align: center; }
+  .hero h1 { font-size: 2.1rem; font-weight: 800; margin-bottom: 10px; }
+  .hero p { font-size: 1.05rem; opacity: .88; max-width: 620px; margin: 0 auto 20px; }
+  .hero-badges { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .badge { background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3); color: #fff; border-radius: 20px; padding: 5px 14px; font-size: .82rem; }
+
+  /* SECTIONS */
+  main { max-width: 900px; margin: 0 auto; padding: 24px 16px 60px; }
+  .section-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--border); }
+  .accordion-header { width: 100%; background: none; border: none; padding: 18px 22px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-size: 1.05rem; font-weight: 700; color: var(--primary-dark); text-align: left; gap: 10px; }
+  .accordion-header:hover { background: var(--primary-light); }
+  .accordion-header .topic-num { background: var(--primary); color: #fff; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: .85rem; flex-shrink: 0; }
+  .accordion-icon { font-size: 1.1rem; transition: transform .3s; flex-shrink: 0; }
+  .accordion-header.open .accordion-icon { transform: rotate(180deg); }
+  .accordion-body { display: none; padding: 0 22px 22px; }
+  .accordion-body.open { display: block; }
+
+  /* CONTENT */
+  .section-desc { color: var(--text-light); font-size: .97rem; line-height: 1.7; margin-bottom: 16px; }
+  h3 { color: var(--primary-dark); font-size: 1rem; margin: 18px 0 8px; }
+  .key-concepts { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .tag { background: var(--primary-light); color: var(--primary-dark); border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; font-size: .82rem; font-weight: 600; }
+  .points-list { list-style: none; padding: 0; }
+  .points-list li { padding: 6px 0 6px 22px; position: relative; font-size: .95rem; border-bottom: 1px dashed var(--border); }
+  .points-list li:last-child { border-bottom: none; }
+  .points-list li::before { content: "✓"; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
+  .table-wrap { overflow-x: auto; margin: 12px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  th { background: var(--primary); color: #fff; padding: 10px 12px; text-align: left; }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+  tr:nth-child(even) td { background: var(--primary-light); }
+  .mini-summary { background: var(--accent-light); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 12px 16px; margin-top: 14px; font-size: .95rem; }
+  .mini-summary strong { color: #8a6000; }
+
+  /* FLASHCARDS */
+  .flashcard-section { padding: 22px; }
+  .flashcard-section h2 { font-size: 1.1rem; margin-bottom: 14px; color: var(--primary-dark); }
+  .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+  .flashcard { perspective: 1000px; height: 150px; cursor: pointer; }
+  .flashcard-inner { width: 100%; height: 100%; transition: transform .55s; transform-style: preserve-3d; position: relative; }
+  .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+  .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 14px; text-align: center; font-size: .9rem; line-height: 1.4; }
+  .flashcard-front { background: linear-gradient(135deg, var(--primary) 0%, #2e8b57 100%); color: #fff; font-weight: 600; }
+  .flashcard-back { background: var(--card); border: 2px solid var(--primary); color: var(--text); transform: rotateY(180deg); }
+  .fc-hint { font-size: .72rem; opacity: .7; display: block; margin-top: 6px; }
+
+  /* QUIZ */
+  .quiz-section { padding: 22px; }
+  .quiz-section h2 { font-size: 1.1rem; margin-bottom: 6px; color: var(--primary-dark); }
+  .quiz-subtitle { color: var(--text-light); font-size: .88rem; margin-bottom: 18px; }
+  .quiz-question { background: var(--primary-light); border-radius: 10px; padding: 16px; margin-bottom: 16px; border: 1px solid var(--border); }
+  .quiz-question p { font-weight: 600; font-size: .97rem; margin-bottom: 12px; }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+  .quiz-options label { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; padding: 8px 12px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--card); transition: border-color .2s, background .2s; font-size: .92rem; }
+  .quiz-options label:hover { border-color: var(--primary); background: var(--primary-light); }
+  .quiz-options input[type=radio] { margin-top: 3px; accent-color: var(--primary); }
+  .quiz-feedback { display: none; margin-top: 10px; padding: 8px 12px; border-radius: 7px; font-size: .9rem; font-weight: 600; }
+  .quiz-feedback.correct { background: #e8f5e9; color: var(--correct); display: block; }
+  .quiz-feedback.incorrect { background: #ffebee; color: var(--incorrect); display: block; }
+  .btn { background: var(--primary); color: #fff; border: none; padding: 12px 28px; border-radius: 25px; font-size: .95rem; font-weight: 700; cursor: pointer; transition: background .2s, transform .1s; margin-top: 8px; }
+  .btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+  .btn-secondary { background: var(--card); color: var(--primary); border: 2px solid var(--primary); }
+  .btn-secondary:hover { background: var(--primary-light); transform: translateY(-1px); }
+  .score-box { display: none; background: linear-gradient(135deg, var(--primary), #2e8b57); color: #fff; border-radius: 12px; padding: 22px; text-align: center; margin-top: 16px; }
+  .score-box h3 { font-size: 1.4rem; margin-bottom: 6px; }
+  .score-box p { opacity: .9; }
+
+  /* FINAL QUIZ */
+  .final-quiz-wrap { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; border: 1px solid var(--border); overflow: hidden; }
+  .final-quiz-header { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: #fff; padding: 20px 22px; }
+  .final-quiz-header h2 { font-size: 1.3rem; }
+  .final-quiz-header p { opacity: .85; font-size: .9rem; margin-top: 4px; }
+  .final-quiz-body { padding: 22px; }
+
+  /* SCROLL */
+  ::-webkit-scrollbar { width: 7px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 1.5rem; }
+    nav .brand { font-size: 1rem; }
+    .flashcard-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="brand">🌿 Guía Evolución</span>
+  <div class="nav-links">
+    <a href="#tema1" onclick="navClick(this)">📖 Tema 1</a>
+    <a href="#tema2" onclick="navClick(this)">🔬 Tema 2</a>
+    <a href="#tema3" onclick="navClick(this)">🦴 Tema 3</a>
+    <a href="#tema4" onclick="navClick(this)">🧬 Tema 4</a>
+    <a href="#tema5" onclick="navClick(this)">🔄 Tema 5</a>
+    <a href="#flashcards" onclick="navClick(this)">🃏 Flashcards</a>
+    <a href="#quiz" onclick="navClick(this)">📝 Quiz</a>
+  </div>
+</nav>
+
+<div class="progress-bar-wrap">
+  <span class="progress-label" id="progressLabel">Progreso: 0 / 5 temas</span>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<div class="hero">
+  <h1>Principios de Evolución</h1>
+  <p>Guía de estudio interactiva basada en los Capítulos 15 y 16 de Biología</p>
+  <div class="hero-badges">
+    <span class="badge">📚 5 Temas</span>
+    <span class="badge">🃏 20 Flashcards</span>
+    <span class="badge">📝 15 Preguntas</span>
+    <span class="badge">⏱️ ~45 min</span>
+  </div>
+</div>
+
+<main>
+
+<!-- ===== TEMA 1 ===== -->
+<div class="section-card" id="tema1">
+  <button class="accordion-header" onclick="toggleAccordion(this)" data-topic="1">
+    <span class="topic-num">1</span>
+    <span style="flex:1">Desarrollo del Pensamiento Evolutivo</span>
+    <span class="accordion-icon">▼</span>
+  </button>
+  <div class="accordion-body">
+    <p class="section-desc">Desde la Antigua Grecia hasta Darwin, el concepto de evolución tardó siglos en desarrollarse. Las visiones estáticas de las especies fueron desafiadas por fósiles, geología y exploración biológica.</p>
+    <h3>🔑 Conceptos clave</h3>
+    <div class="key-concepts">
+      <span class="tag">Evolución</span><span class="tag">Escalera de la Naturaleza</span><span class="tag">Fósiles</span>
+      <span class="tag">Uniformitarianismo</span><span class="tag">Catastrofismo</span><span class="tag">Herencia de características adquiridas</span>
+    </div>
+    <h3>👥 Línea de tiempo de pensadores</h3>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Científico</th><th>Época</th><th>Aportación</th></tr>
+      <tr><td>Aristóteles</td><td>384–322 a.n.e.</td><td>"Escalera de la naturaleza" – especies fijas e inmutables</td></tr>
+      <tr><td>Buffon (Conde)</td><td>1707–1788</td><td>Sugirió que las especies podían "mejorar" o "degenerar" con el tiempo</td></tr>
+      <tr><td>William Smith</td><td>1769–1839</td><td>Reconoció la secuencia de fósiles en capas de roca</td></tr>
+      <tr><td>Cuvier</td><td>1769–1832</td><td>Catastrofismo: catástrofes sucesivas explican los fósiles extintos</td></tr>
+      <tr><td>Lamarck</td><td>1744–1829</td><td>Herencia de características adquiridas (uso/desuso)</td></tr>
+      <tr><td>Hutton / Lyell</td><td>1726–1875</td><td>Uniformitarianismo: la Tierra es muy antigua (~4 500 millones de años)</td></tr>
+      <tr><td>Darwin y Wallace</td><td>1809–1913</td><td>Selección natural como mecanismo de evolución (1858–1859)</td></tr>
+    </table>
+    </div>
+    <h3>⭐ Puntos para memorizar</h3>
+    <ul class="points-list">
+      <li><strong>Evolución</strong> = cambio en las características de una <em>población</em> a través del tiempo.</li>
+      <li>Aristóteles creía que las especies eran <em>fijas e invariables</em> para siempre.</li>
+      <li><strong>Lamarck</strong> propuso la herencia de características adquiridas — hoy se sabe que es incorrecta.</li>
+      <li><strong>Uniformitarianismo</strong>: el pasado geológico se explica por los mismos procesos lentos actuales.</li>
+      <li>Darwin publicó <em>El origen de las especies</em> en <strong>1859</strong>.</li>
+      <li>Wallace envió ideas similares a Darwin en 1858, motivándolo a publicar.</li>
+    </ul>
+    <div class="mini-summary"><strong>📌 Resumen:</strong> La visión de especies fijas dominó más de 2 000 años. Los fósiles, la geología y la exploración biológica del siglo XVIII–XIX abrieron el camino a la teoría evolutiva, culminando con Darwin y Wallace.</div>
+  </div>
+</div>
+
+<!-- ===== TEMA 2 ===== -->
+<div class="section-card" id="tema2">
+  <button class="accordion-header" onclick="toggleAccordion(this)" data-topic="2">
+    <span class="topic-num">2</span>
+    <span style="flex:1">¿Cómo Opera la Selección Natural?</span>
+    <span class="accordion-icon">▼</span>
+  </button>
+  <div class="accordion-body">
+    <p class="section-desc">Darwin y Wallace propusieron la <strong>descendencia con modificación</strong> impulsada por selección natural. La teoría se basa en cuatro postulados lógicos sobre las poblaciones.</p>
+    <h3>🔑 Conceptos clave</h3>
+    <div class="key-concepts">
+      <span class="tag">Selección natural</span><span class="tag">Descendencia con modificación</span>
+      <span class="tag">Variación heredable</span><span class="tag">Reproducción diferencial</span><span class="tag">Aptitud</span>
+    </div>
+    <h3>📋 Los 4 Postulados de Darwin y Wallace</h3>
+    <div class="table-wrap">
+    <table>
+      <tr><th>#</th><th>Postulado</th><th>Ejemplo</th></tr>
+      <tr><td><strong>1</strong></td><td>Los individuos de una población <strong>varían</strong></td><td>Caracoles con conchas de colores distintos en la misma población</td></tr>
+      <tr><td><strong>2</strong></td><td>Las diferencias son <strong>heredables</strong></td><td>Descendientes se parecen a sus progenitores (confirmado por Mendel)</td></tr>
+      <tr><td><strong>3</strong></td><td>Algunos individuos <strong>no sobreviven ni se reproducen</strong></td><td>Un par de elefantes generaría 19 millones en 750 años sin límites</td></tr>
+      <tr><td><strong>4</strong></td><td>El éxito reproductivo depende de los <strong>rasgos</strong></td><td>Elefantes marinos más grandes tienen más descendientes</td></tr>
+    </table>
+    </div>
+    <h3>⭐ Puntos para memorizar</h3>
+    <ul class="points-list">
+      <li>La selección natural actúa sobre <em>individuos</em>, pero la <em>población</em> es la que evoluciona.</li>
+      <li>Un individuo NO puede evolucionar; una población SÍ.</li>
+      <li>Las variaciones provienen de <strong>mutaciones aleatorias</strong>, no de las necesidades del organismo.</li>
+      <li>Thomas Malthus (1798) influyó a Darwin con su ensayo sobre el crecimiento poblacional.</li>
+      <li>"Sobrevivencia del más apto" (Herbert Spencer) no significa el más fuerte, sino el de <strong>mayor éxito reproductivo</strong>.</li>
+    </ul>
+    <div class="mini-summary"><strong>📌 Resumen:</strong> Si los 4 postulados son verdaderos, las poblaciones inevitablemente cambiarán con el tiempo. Los rasgos ventajosos se vuelven más frecuentes en generaciones sucesivas = evolución por selección natural.</div>
+  </div>
+</div>
+
+<!-- ===== TEMA 3 ===== -->
+<div class="section-card" id="tema3">
+  <button class="accordion-header" onclick="toggleAccordion(this)" data-topic="3">
+    <span class="topic-num">3</span>
+    <span style="flex:1">Evidencia de que la Evolución Ha Ocurrido</span>
+    <span class="accordion-icon">▼</span>
+  </button>
+  <div class="accordion-body">
+    <p class="section-desc">Un abrumador cuerpo de evidencia proveniente de fósiles, anatomía comparada, embriología y bioquímica confirma que la evolución es un hecho científico.</p>
+    <h3>🔑 Conceptos clave</h3>
+    <div class="key-concepts">
+      <span class="tag">Fósiles</span><span class="tag">Estructuras homólogas</span><span class="tag">Estructuras análogas</span>
+      <span class="tag">Estructuras vestigiales</span><span class="tag">Evolución convergente</span><span class="tag">Homología molecular</span>
+    </div>
+    <h3>🧩 Tipos de evidencia</h3>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Evidencia</th><th>Descripción</th><th>Ejemplo</th></tr>
+      <tr><td>🦴 Fósiles</td><td>Muestran series progresivas de cambio</td><td>Evolución de la ballena: de terrestre a acuático en 50 M años</td></tr>
+      <tr><td>🦾 Estructuras homólogas</td><td>Mismo origen evolutivo, distintas funciones</td><td>Antebrazo de humano, murciélago, delfín y ave</td></tr>
+      <tr><td>🦋 Estructuras análogas</td><td>Misma función, distinto origen (evolución convergente)</td><td>Alas de insectos vs. alas de aves</td></tr>
+      <tr><td>🐾 Estructuras vestigiales</td><td>Sin función; "bagaje evolutivo"</td><td>Huesos pélvicos en ballenas; cóccix humano; alas del avestruz</td></tr>
+      <tr><td>🐣 Embriología</td><td>Embriones de especies distintas son muy similares</td><td>Peces, pollos y humanos tienen cola y hendiduras branquiales al inicio</td></tr>
+      <tr><td>🧬 Bioquímica/ADN</td><td>Moléculas homólogas en todos los seres vivos</td><td>Gen del citocromo c; uso universal de ADN, ARN, ATP</td></tr>
+    </table>
+    </div>
+    <h3>⭐ Diferencias clave: Homólogas vs. Análogas</h3>
+    <ul class="points-list">
+      <li><strong>Homólogas:</strong> Mismo origen ancestral común → evidencia de parentesco evolutivo</li>
+      <li><strong>Análogas:</strong> Función similar, origen distinto → evidencia de evolución convergente</li>
+      <li>Las alas de aves e insectos son <em>análogas</em> (no descendieron del mismo ancestro con alas)</li>
+      <li>Las extremidades de ballena, murciélago y humano son <em>homólogas</em></li>
+    </ul>
+    <div class="mini-summary"><strong>📌 Resumen:</strong> Los fósiles muestran cambio en el tiempo; la anatomía comparada revela ancestros comunes; la embriología muestra parentesco; la bioquímica demuestra el origen común de toda la vida.</div>
+  </div>
+</div>
+
+<!-- ===== TEMA 4 ===== -->
+<div class="section-card" id="tema4">
+  <button class="accordion-header" onclick="toggleAccordion(this)" data-topic="4">
+    <span class="topic-num">4</span>
+    <span style="flex:1">Evidencia de Selección Natural en Acción</span>
+    <span class="accordion-icon">▼</span>
+  </button>
+  <div class="accordion-body">
+    <p class="section-desc">La selección natural no solo ocurrió en el pasado — puede observarse y experimentarse <strong>hoy mismo</strong>. Varios ejemplos demuestran la evolución en tiempo real.</p>
+    <h3>🔑 Conceptos clave</h3>
+    <div class="key-concepts">
+      <span class="tag">Selección artificial</span><span class="tag">Resistencia a antibióticos</span>
+      <span class="tag">Resistencia a herbicidas</span><span class="tag">Cambio climático y evolución</span><span class="tag">Coevolución</span>
+    </div>
+    <h3>🔍 Ejemplos de selección natural observada</h3>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Caso</th><th>Mecanismo</th><th>Resultado</th></tr>
+      <tr><td>🏋️ Selección artificial (perros)</td><td>Humanos seleccionan rasgos deseables</td><td>De lobos a razas muy diversas en pocos miles de años</td></tr>
+      <tr><td>🦗 Grillos en Kauai</td><td>Pulgas parásitas atraídas por los llamados sonoros</td><td>En <20 generaciones, casi todos los machos son silenciosos</td></tr>
+      <tr><td>🌿 Superhierbajos con glifosato</td><td>Herbicida como agente de selección</td><td>Mutación protectora de la enzima se volvió común</td></tr>
+      <tr><td>🦠 Resistencia a antibióticos</td><td>Bacterias con alelos de resistencia sobreviven</td><td>Evolución de bacterias resistentes (>500 especies de insectos)</td></tr>
+      <tr><td>🦎 Lagartijas en Bahamas</td><td>Nuevo ambiente (arbustos vs. árboles)</td><td>En 14 años: patas más cortas y delgadas, mayor agilidad</td></tr>
+      <tr><td>🦉 Búhos en Finlandia</td><td>Cambio climático reduce nieve invernal</td><td>Búhos marrones (menos visibles en menos nieve) aumentaron al 40%</td></tr>
+    </table>
+    </div>
+    <h3>⭐ Dos principios fundamentales</h3>
+    <ul class="points-list">
+      <li>Las variaciones sobre las que actúa la selección natural se producen por <strong>mutaciones aleatorias</strong> (no son dirigidas por el ambiente)</li>
+      <li>La selección natural no produce "perfección" absoluta, sino <strong>adaptación al ambiente particular actual</strong></li>
+      <li>Un rasgo ventajoso en un ambiente puede ser desventajoso si el ambiente cambia</li>
+    </ul>
+    <div class="mini-summary"><strong>📌 Resumen:</strong> La selección natural es observable en tiempo real. La selección artificial, la resistencia a pesticidas/antibióticos y experimentos con lagartijas son pruebas directas de que las poblaciones evolucionan por selección natural.</div>
+  </div>
+</div>
+
+<!-- ===== TEMA 5 ===== -->
+<div class="section-card" id="tema5">
+  <button class="accordion-header" onclick="toggleAccordion(this)" data-topic="5">
+    <span class="topic-num">5</span>
+    <span style="flex:1">Tipos de Selección Natural y Adaptación</span>
+    <span class="accordion-icon">▼</span>
+  </button>
+  <div class="accordion-body">
+    <p class="section-desc">La selección natural puede actuar de tres formas distintas sobre la variación fenotípica de una población, produciendo diferentes patrones evolutivos.</p>
+    <h3>🔑 Conceptos clave</h3>
+    <div class="key-concepts">
+      <span class="tag">Selección direccional</span><span class="tag">Selección estabilizadora</span>
+      <span class="tag">Selección disruptiva</span><span class="tag">Aptitud</span><span class="tag">Coevolución</span><span class="tag">Depredación</span>
+    </div>
+    <h3>📊 Los tres tipos de selección</h3>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Tipo</th><th>¿Qué favorece?</th><th>Resultado</th><th>Ejemplo</th></tr>
+      <tr><td>➡️ Direccional</td><td>Un extremo del rasgo</td><td>El promedio poblacional se desplaza</td><td>Resistencia a antibióticos; pelaje más grueso en glaciaciones</td></tr>
+      <tr><td>⚖️ Estabilizadora</td><td>Valores promedio/intermedios</td><td>Reduce variabilidad; mantiene el promedio</td><td>Lagartijas Aristelliger: ni muy grandes ni muy pequeñas</td></tr>
+      <tr><td>↔️ Disruptiva</td><td>Ambos extremos</td><td>La población se divide en dos grupos</td><td>Picos de pinzones: grandes para semillas duras, pequeños para blandas</td></tr>
+    </table>
+    </div>
+    <h3>🌍 Coevolución</h3>
+    <ul class="points-list">
+      <li><strong>Coevolución:</strong> Dos especies se afectan mutuamente en su evolución a lo largo del tiempo</li>
+      <li>Ejemplo: depredador (lobo) y presa (ciervo) — "carrera armamentista biológica"</li>
+      <li>Los ciervos más rápidos/alerta sobreviven → seleccionan lobos más rápidos/inteligentes</li>
+      <li>La aptitud (<em>fitness</em>) = éxito reproductivo durante toda la vida del individuo</li>
+    </ul>
+    <h3>🏥 Selección y medicina (Cáncer)</h3>
+    <ul class="points-list">
+      <li>Los tumores son poblaciones celulares en evolución</li>
+      <li>La quimioterapia actúa como agente de selección → selecciona células resistentes</li>
+      <li>Comprender la evolución de tumores puede mejorar tratamientos</li>
+    </ul>
+    <div class="mini-summary"><strong>📌 Resumen:</strong> La selección actúa sobre fenotipos (no genotipos directamente), pero afecta inevitablemente la composición genética de la población. Los tres patrones de selección explican diferentes tendencias evolutivas observadas en la naturaleza.</div>
+  </div>
+</div>
+
+<!-- ===== FLASHCARDS ===== -->
+<div class="section-card" id="flashcards">
+  <div class="flashcard-section">
+    <h2>🃏 Flashcards Interactivas <small style="font-weight:400;color:var(--text-light);font-size:.85rem">— Haz clic para ver la respuesta</small></h2>
+    <div class="flashcard-grid">
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">¿Qué es la evolución?<span class="fc-hint">Toca para responder</span></div>
+          <div class="flashcard-back">Cambio en las características de una <strong>población</strong> a través del tiempo</div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">¿Quiénes propusieron la selección natural de forma independiente?</div>
+          <div class="flashcard-back"><strong>Charles Darwin</strong> y <strong>Alfred Russel Wallace</strong> — presentaron en 1858</div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">¿Qué propuso Lamarck?</div>
+          <div class="flashcard-back">Herencia de <strong>características adquiridas</strong>: modificaciones por uso/desuso se heredan. Hoy se sabe que es <em>incorrecta</em>.</div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">¿Qué es el uniformitarianismo?</div>
+          <div class="flashcard-back">El paisaje terrestre se formó por los <strong>mismos procesos lentos y graduales</strong> que observamos hoy (Hutton/Lyell)</div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">Postulado 4 de Darwin</div>
+          <div class="flashcard-back">El éxito reproductivo depende de los <strong>rasgos del individuo</strong>, no de la casualidad → selección natural</div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">¿Qué es una estructura homóloga?</div>
+          <div class="flashcard-back">Estructura con <strong>mismo origen evolutivo</strong> pero que puede tener funciones distintas (ej: brazo humano y aleta de ballena)</div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">¿Qué es una estructura vestigial?</div>
+          <div class="flashcard-back">Estructura reducida o sin función actual; "bagaje evolutivo" (ej: huesos pélvicos en ballenas, cóccix humano)</div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">¿Qué es la evolución convergente?</div>
+          <div class="flashcard-back">Estructuras <strong>no homólogas</strong> que se parecen por tener funciones similares (ej: alas de insectos y aves)</div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">¿Cuántos años tiene la Tierra según geólogos modernos?</div>
+          <div class="flashcard-back">Aproximadamente <strong>4.5 mil millones de años</strong></div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">¿Qué demuestran los grillos silenciosos de Kauai?</div>
+          <div class="flashcard-back">Que la selección natural puede cambiar poblaciones en <strong>menos de 20 generaciones</strong> en respuesta a nuevos depredadores</div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">¿Qué es la selección artificial?</div>
+          <div class="flashcard-back">Cruza controlada de organismos por humanos para obtener rasgos deseables (ej: razas de perros a partir de lobos)</div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">¿Qué favorece la selección estabilizadora?</div>
+          <div class="flashcard-back">Los <strong>fenotipos promedio</strong>; selecciona contra los extremos → reduce variabilidad fenotípica</div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">¿Por qué la resistencia a antibióticos es ejemplo de selección natural?</div>
+          <div class="flashcard-back">El antibiótico actúa como agente de selección: bacterias con alelos de resistencia sobreviven y se reproducen más</div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">¿Qué es la coevolución?</div>
+          <div class="flashcard-back">Proceso en que <strong>dos especies se afectan mutuamente</strong> en su evolución (ej: depredador-presa, "carrera armamentista biológica")</div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">¿Qué significa "aptitud" en biología evolutiva?</div>
+          <div class="flashcard-back"><strong>Éxito reproductivo</strong> durante toda la vida del organismo; no significa ser el más fuerte o veloz</div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">¿Catastrofismo? ¿Quién lo propuso?</div>
+          <div class="flashcard-back"><strong>Georges Cuvier</strong>: catástrofes sucesivas (diluvios) destruyeron especies y formaron capas de roca con fósiles</div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">¿Qué evidencia obtuvo Darwin en las Galápagos?</div>
+          <div class="flashcard-back">Cenzontles y pinzones distintos en cada isla → sugirió que las especies pueden cambiar con el tiempo y el aislamiento geográfico</div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">¿Qué comparten bioquímicamente todos los seres vivos?</div>
+          <div class="flashcard-back">ADN como portador genético, ARN y ribosomas, código genético casi idéntico, ~20 aminoácidos, ATP como moneda de energía</div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">¿Qué es la selección direccional?</div>
+          <div class="flashcard-back">Favorece a los individuos con un <strong>valor extremo</strong> de un rasgo; el promedio poblacional se desplaza en esa dirección</div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">¿Por qué las muelas del juicio son estructuras vestigiales?</div>
+          <div class="flashcard-back">Son dientes que nuestros ancestros usaban para masticar plantas duras; en humanos modernos, la mandíbula es demasiado pequeña para contenerlas correctamente</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== QUIZ ===== -->
+<div class="section-card" id="quiz">
+  <div class="quiz-section">
+    <h2>📝 Cuestionario de Práctica</h2>
+    <p class="quiz-subtitle">Responde cada pregunta y recibe retroalimentación inmediata. Intenta responder sin ver tus notas primero.</p>
+
+    <!-- Q1 -->
+    <div class="quiz-question" id="q1">
+      <p>1. ¿Cuál es la definición correcta de evolución?</p>
+      <div class="quiz-options">
+        <label><input type="radio" name="q1" value="a"> a) Cambio en las características de un individuo a través del tiempo</label>
+        <label><input type="radio" name="q1" value="b"> b) Cambio en las características de una <strong>población</strong> a través del tiempo</label>
+        <label><input type="radio" name="q1" value="c"> c) El surgimiento espontáneo de nuevas especies en una generación</label>
+        <label><input type="radio" name="q1" value="d"> d) La adaptación de un organismo a su ambiente durante su vida</label>
+      </div>
+      <div class="quiz-feedback" id="fb1"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quiz-question" id="q2">
+      <p>2. Los huesos pélvicos vestigiales en las ballenas son evidencia de que:</p>
+      <div class="quiz-options">
+        <label><input type="radio" name="q2" value="a"> a) Las ballenas evolucionaron mediante evolución convergente</label>
+        <label><input type="radio" name="q2" value="b"> b) Las ballenas evolucionaron a partir de ancestros terrestres con patas traseras</label>
+        <label><input type="radio" name="q2" value="c"> c) Ocurrieron catástrofes geológicas que afectaron a los ancestros</label>
+        <label><input type="radio" name="q2" value="d"> d) Las ballenas algún día desarrollarán patas funcionales</label>
+      </div>
+      <div class="quiz-feedback" id="fb2"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quiz-question" id="q3">
+      <p>3. ¿Cuál de los siguientes NO es un postulado de la teoría de Darwin y Wallace?</p>
+      <div class="quiz-options">
+        <label><input type="radio" name="q3" value="a"> a) Los individuos de una población varían en sus rasgos</label>
+        <label><input type="radio" name="q3" value="b"> b) Las variaciones pueden heredarse de progenitores a descendientes</label>
+        <label><input type="radio" name="q3" value="c"> c) Los organismos tienen un impulso innato hacia la perfección</label>
+        <label><input type="radio" name="q3" value="d"> d) Algunos individuos tienen más descendientes que otros</label>
+      </div>
+      <div class="quiz-feedback" id="fb3"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="quiz-question" id="q4">
+      <p>4. Las alas de los insectos y las alas de las aves son ejemplos de:</p>
+      <div class="quiz-options">
+        <label><input type="radio" name="q4" value="a"> a) Estructuras homólogas — provienen del mismo ancestro</label>
+        <label><input type="radio" name="q4" value="b"> b) Estructuras análogas — evolución convergente, misma función pero distinto origen</label>
+        <label><input type="radio" name="q4" value="c"> c) Estructuras vestigiales — no tienen función actual</label>
+        <label><input type="radio" name="q4" value="d"> d) Estructuras embriológicas — solo se parecen en estadios tempranos</label>
+      </div>
+      <div class="quiz-feedback" id="fb4"></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="quiz-question" id="q5">
+      <p>5. Los grillos silenciosos de la isla Kauai son un ejemplo de:</p>
+      <div class="quiz-options">
+        <label><input type="radio" name="q5" value="a"> a) Selección artificial por parte de los investigadores</label>
+        <label><input type="radio" name="q5" value="b"> b) Herencia de características adquiridas (Lamarck)</label>
+        <label><input type="radio" name="q5" value="c"> c) Selección natural observable en tiempo real</label>
+        <label><input type="radio" name="q5" value="d"> d) Evolución convergente con otros insectos</label>
+      </div>
+      <div class="quiz-feedback" id="fb5"></div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="quiz-question" id="q6">
+      <p>6. ¿Qué tipo de selección ocurre cuando se favorecen los fenotipos promedio y se eliminan los extremos?</p>
+      <div class="quiz-options">
+        <label><input type="radio" name="q6" value="a"> a) Selección disruptiva</label>
+        <label><input type="radio" name="q6" value="b"> b) Selección direccional</label>
+        <label><input type="radio" name="q6" value="c"> c) Selección estabilizadora</label>
+        <label><input type="radio" name="q6" value="d"> d) Selección sexual</label>
+      </div>
+      <div class="quiz-feedback" id="fb6"></div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="quiz-question" id="q7">
+      <p>7. El uniformitarianismo, propuesto por Hutton y Lyell, implica que:</p>
+      <div class="quiz-options">
+        <label><input type="radio" name="q7" value="a"> a) La Tierra fue formada por catástrofes repentinas</label>
+        <label><input type="radio" name="q7" value="b"> b) La Tierra tiene solo unos pocos miles de años de antigüedad</label>
+        <label><input type="radio" name="q7" value="c"> c) El paisaje terrestre se formó por procesos lentos y graduales — la Tierra es muy antigua</label>
+        <label><input type="radio" name="q7" value="d"> d) Todas las especies fueron creadas simultáneamente</label>
+      </div>
+      <div class="quiz-feedback" id="fb7"></div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="quiz-question" id="q8">
+      <p>8. La "aptitud" en biología evolutiva se refiere a:</p>
+      <div class="quiz-options">
+        <label><input type="radio" name="q8" value="a"> a) La fuerza física del organismo</label>
+        <label><input type="radio" name="q8" value="b"> b) La velocidad con que un organismo puede moverse</label>
+        <label><input type="radio" name="q8" value="c"> c) El éxito reproductivo durante toda la vida del organismo</label>
+        <label><input type="radio" name="q8" value="d"> d) La capacidad del organismo para sobrevivir en condiciones extremas</label>
+      </div>
+      <div class="quiz-feedback" id="fb8"></div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="quiz-question" id="q9">
+      <p>9. ¿Cuál afirmación es INCORRECTA sobre la selección natural?</p>
+      <div class="quiz-options">
+        <label><input type="radio" name="q9" value="a"> a) Actúa sobre los fenotipos de los individuos</label>
+        <label><input type="radio" name="q9" value="b"> b) Puede observarse ocurriendo en la actualidad</label>
+        <label><input type="radio" name="q9" value="c"> c) Produce rasgos perfectamente adaptados a cualquier ambiente</label>
+        <label><input type="radio" name="q9" value="d"> d) Requiere variación heredable en la población</label>
+      </div>
+      <div class="quiz-feedback" id="fb9"></div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="quiz-question" id="q10">
+      <p>10. ¿Cuál es la evidencia más sorprendente del origen común de todos los seres vivos?</p>
+      <div class="quiz-options">
+        <label><input type="radio" name="q10" value="a"> a) Que todos los organismos tienen la misma forma corporal</label>
+        <label><input type="radio" name="q10" value="b"> b) Que todas las células usan ADN, ARN, el mismo código genético y ATP</label>
+        <label><input type="radio" name="q10" value="c"> c) Que todos los animales tienen embriones idénticos</label>
+        <label><input type="radio" name="q10" value="d"> d) Que todos los organismos viven en el mismo tipo de ambiente</label>
+      </div>
+      <div class="quiz-feedback" id="fb10"></div>
+    </div>
+
+    <button class="btn" onclick="checkQuiz()">✔ Revisar respuestas</button>
+    <button class="btn btn-secondary" onclick="resetQuiz()" style="margin-left:10px">↺ Reiniciar</button>
+    <div class="score-box" id="scoreBox">
+      <h3 id="scoreTitle"></h3>
+      <p id="scoreMsg"></p>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ===== ACCORDION =====
+var openTopics = new Set();
+function toggleAccordion(btn) {
+  var body = btn.nextElementSibling;
+  var isOpen = body.classList.contains('open');
+  body.classList.toggle('open');
+  btn.classList.toggle('open');
+  var topic = btn.getAttribute('data-topic');
+  if (!isOpen) {
+    openTopics.add(topic);
+  } else {
+    openTopics.delete(topic);
+  }
+  updateProgress();
+}
+function updateProgress() {
+  var count = openTopics.size > 5 ? 5 : openTopics.size;
+  var pct = (count / 5) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = 'Progreso: ' + count + ' / 5 temas';
+}
+
+// ===== NAV SCROLL =====
+function navClick(el) {
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ===== QUIZ =====
+var answers = {
+  q1:'b', q2:'b', q3:'c', q4:'b', q5:'c',
+  q6:'c', q7:'c', q8:'c', q9:'c', q10:'b'
+};
+var explanations = {
+  q1:'La evolución es un proceso que ocurre a nivel de <strong>poblaciones</strong>, no de individuos.',
+  q2:'Los huesos pélvicos vestigiales en las ballenas son "bagaje evolutivo" de sus ancestros terrestres con patas traseras.',
+  q3:'El "impulso innato a la perfección" fue propuesto por <strong>Lamarck</strong>, no por Darwin y Wallace.',
+  q4:'Las alas de insectos y aves son análogas: misma función (volar) pero surgieron de estructuras distintas, sin ancestro alado común.',
+  q5:'Los grillos silenciosos evolucionaron en <20 generaciones cuando las pulgas parásitas llegaron a Kauai — selección natural en acción.',
+  q6:'La selección estabilizadora mantiene el fenotipo promedio y reduce la variabilidad extrema de la población.',
+  q7:'Hutton y Lyell demostraron que los procesos geológicos actuales son los mismos del pasado, implicando que la Tierra es muy antigua (~4.5 Ga).',
+  q8:'Aptitud = éxito reproductivo total. Lo que importa es cuántos descendientes viables deja un individuo.',
+  q9:'La selección natural no produce "perfección absoluta"; solo produce adaptación al ambiente <strong>actual y local</strong>.',
+  q10:'La homología bioquímica universal (ADN, código genético, ATP) es la evidencia más fundamental del origen común de toda la vida.'
+};
+
+function checkQuiz() {
+  var score = 0;
+  for (var qnum = 1; qnum <= 10; qnum++) {
+    var key = 'q' + qnum;
+    var selected = document.querySelector('input[name="' + key + '"]:checked');
+    var fb = document.getElementById('fb' + qnum);
+    if (!selected) {
+      fb.className = 'quiz-feedback incorrect';
+      fb.innerHTML = '⚠️ No respondiste esta pregunta.';
+      continue;
+    }
+    if (selected.value === answers[key]) {
+      score++;
+      fb.className = 'quiz-feedback correct';
+      fb.innerHTML = '✅ ¡Correcto! ' + explanations[key];
+    } else {
+      fb.className = 'quiz-feedback incorrect';
+      fb.innerHTML = '❌ Incorrecto. La respuesta correcta es <strong>' + answers[key].toUpperCase() + '</strong>. ' + explanations[key];
+    }
+  }
+  var box = document.getElementById('scoreBox');
+  var title = document.getElementById('scoreTitle');
+  var msg = document.getElementById('scoreMsg');
+  box.style.display = 'block';
+  var pct = Math.round((score / 10) * 100);
+  title.textContent = score + '/10 — ' + pct + '%';
+  if (score >= 9) {
+    msg.textContent = '🏆 ¡Excelente! Dominas el tema de evolución.';
+  } else if (score >= 7) {
+    msg.textContent = '👍 Buen resultado. Repasa los temas donde te equivocaste.';
+  } else if (score >= 5) {
+    msg.textContent = '📖 Resultado regular. Te recomendamos repasar las secciones del acordeón.';
+  } else {
+    msg.textContent = '💪 Necesitas más repaso. Lee de nuevo las secciones y usa las flashcards.';
+  }
+  box.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function resetQuiz() {
+  for (var qnum = 1; qnum <= 10; qnum++) {
+    var key = 'q' + qnum;
+    var radios = document.querySelectorAll('input[name="' + key + '"]');
+    radios.forEach(function(r) { r.checked = false; });
+    var fb = document.getElementById('fb' + qnum);
+    fb.className = 'quiz-feedback';
+    fb.innerHTML = '';
+  }
+  var box = document.getElementById('scoreBox');
+  box.style.display = 'none';
+}
+
+// Highlight nav on scroll
+window.addEventListener('scroll', function() {
+  var sections = ['tema1','tema2','tema3','tema4','tema5','flashcards','quiz'];
+  var links = document.querySelectorAll('.nav-links a');
+  var fromTop = window.scrollY + 100;
+  sections.forEach(function(id, i) {
+    var el = document.getElementById(id);
+    if (el && el.offsetTop <= fromTop && el.offsetTop + el.offsetHeight > fromTop) {
+      links.forEach(function(a) { a.classList.remove('active'); });
+      if (links[i]) links[i].classList.add('active');
+    }
+  });
+});
+</script>
+</body>
+</html>
